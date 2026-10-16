@@ -494,6 +494,81 @@
                 padding: 28px;
             }
         }
+
+      /* ===== MANHWA DASHBOARD NAVIGATION ===== */
+
+.dashboard-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    padding: 25px 7%;
+    background:
+        radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px),
+        #10182e;
+    background-size: 8px 8px;
+    border-bottom: 4px solid #ffe04b;
+}
+
+.dashboard-tab {
+    background: #ffe04b;
+    color: #171717;
+    border: 3px solid #171717;
+    box-shadow: 4px 4px 0 #ff1493;
+    padding: 13px 18px;
+    font-weight: 900;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transform: skew(-3deg);
+    transition: transform 0.2s, background 0.2s;
+}
+
+.dashboard-tab:hover {
+    background: #ff8cba;
+    transform: skew(-3deg) translateY(-4px);
+}
+
+.dashboard-tab.active {
+    background: #ff4b38;
+    color: white;
+    box-shadow: 4px 4px 0 #ffe04b;
+}
+
+.screen-heading {
+    background: #10182e;
+    color: white;
+    padding: 35px 7%;
+    border-bottom: 5px solid #ffe04b;
+}
+
+.screen-heading h2 {
+    color: #ffe04b;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.screen-heading p {
+    color: #ffffff;
+    line-height: 1.6;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+@media (max-width: 600px) {
+    .dashboard-nav {
+        padding: 18px 12px;
+        gap: 10px;
+    }
+
+    .dashboard-tab {
+        padding: 11px 12px;
+        font-size: 0.75rem;
+    }
+}
+        
     </style>
 </head>
 
@@ -581,7 +656,7 @@
 
     <div id="main-site">
 
-        <div class="hero">
+        <div class="hero" data-dashboard-screen="hangar">
 
             <div class="hero-content">
 
@@ -606,10 +681,98 @@
 
         </div>
 
+        <!-- DASHBOARD NAVIGATION -->
+
+<nav class="dashboard-nav">
+
+    <button class="dashboard-tab active"
+            data-screen-target="hangar">
+        🏠 HANGAR
+    </button>
+
+    <button class="dashboard-tab"
+            data-screen-target="missions">
+        ⚡ MISSIONS
+    </button>
+
+    <button class="dashboard-tab"
+            data-screen-target="evidence">
+        📁 EVIDENCE
+    </button>
+
+    <button class="dashboard-tab"
+            data-screen-target="achievements">
+        🏆 ACHIEVEMENTS
+    </button>
+
+    <button class="dashboard-tab"
+            data-screen-target="cake">
+        🎂 CAKE QUEST
+    </button>
+
+    <button class="dashboard-tab"
+            data-screen-target="mcq">
+        🧠 MCQ CHALLENGE
+    </button>
+
+    <button class="dashboard-tab"
+            data-screen-target="classified">
+        🔐 CLASSIFIED
+    </button>
+
+    <button class="dashboard-tab"
+            data-screen-target="final-boss">
+        💌 FINAL BOSS
+    </button>
+
+</nav>
+
+   <!-- CAKE QUEST SCREEN -->
+
+<section data-dashboard-screen="cake" hidden>
+    <div class="screen-heading">
+        <h2>🎂 Cake Quest</h2>
+        <p>MISSION: Bake your own birthday cake.</p>
+    </div>
+
+    <p style="padding: 30px 7%; line-height: 1.7;">
+        Cooking simulator loading...
+        The kitchen is currently under investigation.
+    </p>
+</section>
+
+
+<!-- MCQ CHALLENGE SCREEN -->
+
+<section data-dashboard-screen="mcq" hidden>
+    <div class="screen-heading">
+        <h2>🧠 MCQ Challenge</h2>
+        <p>MISSION: Prove that at least two brain cells are operational.</p>
+    </div>
+
+    <p style="padding: 30px 7%; line-height: 1.7;">
+        Question cards are being prepared.
+        Wrong answers will be judged accordingly.
+    </p>
+</section>
+
+
+<!-- CLASSIFIED SCREEN -->
+
+<section data-dashboard-screen="classified" hidden>
+    <div class="screen-heading">
+        <h2>🔐 Classified Files</h2>
+        <p>RESTRICTED ACCESS — BISCuit's bestie verification required.</p>
+    </div>
+
+    <p style="padding: 30px 7%; line-height: 1.7;">
+        The eight-question verification system will be added here.
+    </p>
+</section>
 
         <!-- ABOUT / NOTES -->
 
-        <section>
+        <section data-dashboard-screen="missions" hidden>
 
             <div class="section-label">
                 File 01
@@ -643,7 +806,7 @@
 
         <!-- FAKE STATISTICS -->
 
-        <section>
+        <section data-dashboard-screen="missions" hidden>
 
             <div class="section-label">
                 File 02
@@ -679,7 +842,7 @@
 
                 <!-- SCREENSHOTS -->
 
-        <section>
+        <section data-dashboard-screen="evidence" hidden>
 
             <div class="section-label">
                 File 03
@@ -832,7 +995,7 @@
         
         <!-- ACHIEVEMENTS -->
 
-        <section>
+        <section data-dashboard-screen="achievements" hidden>
 
             <div class="section-label">
                 File 04
@@ -883,7 +1046,7 @@
 
         <!-- FINAL LETTER -->
 
-        <section class="letter-section">
+        <section class="letter-section" data-dashboard-screen="final-boss" hidden>
 
             <div class="letter-container">
 
@@ -1098,6 +1261,36 @@
             window.scrollTo(0, 0);
 
         });
+
+        /* ===== DASHBOARD SCREEN SWITCHING ===== */
+
+const dashboardTabs = document.querySelectorAll(".dashboard-tab");
+const dashboardScreens = document.querySelectorAll(
+    "[data-dashboard-screen]"
+);
+
+dashboardTabs.forEach(function(tab) {
+    tab.addEventListener("click", function() {
+
+        const target = tab.dataset.screenTarget;
+
+        dashboardScreens.forEach(function(screen) {
+            screen.hidden =
+                screen.dataset.dashboardScreen !== target;
+        });
+
+        dashboardTabs.forEach(function(button) {
+            button.classList.remove("active");
+        });
+
+        tab.classList.add("active");
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    });
+});
 
     </script>
 
